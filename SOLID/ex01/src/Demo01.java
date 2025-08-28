@@ -2,6 +2,9 @@
 
 public class Demo01 {
     public static void main(String[] args) {
-        new OrderService().checkout("a@shop.com", 100.0);
+        EmailSender em = new EmailClient();
+        TaxCalculator tc = new TaxCalculator(0.18);
+
+        new OrderService(em, tc).checkout("a@shop.com", 100.0);
     }
 }
