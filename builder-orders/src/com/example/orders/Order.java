@@ -14,24 +14,65 @@ public class Order {
     private boolean expedited;
     private String notes;
 
-    public Order(String id, String customerEmail) {
-        this.id = id;
-        this.customerEmail = customerEmail;
+    private Order(Builder builder) {
+        this.id = builder.id;
+        this.customerEmail = builder.customerEmail;
+        this.lines.addAll(builder.lines);
+        this.discountPercent = builder.discountPercent;
+        this.expedited = builder.expedited;
+        this.notes = builder.notes;
     }
 
-    public Order(String id, String customerEmail, Integer discountPercent) {
-        this(id, customerEmail);
-        this.discountPercent = discountPercent;
-    }
+    public static class Builder {
+        private final String id;
+        private final String customerEmail;
+        private final List<OrderLine> lines = new ArrayList<>();
+        private Integer discountPercent;
+        private boolean expedited;
+        private String notes;
 
-    public void addLine(OrderLine line) { lines.add(line); }
-    public void setDiscountPercent(Integer discountPercent) { this.discountPercent = discountPercent; }
-    public void setExpedited(boolean expedited) { this.expedited = expedited; }
-    public void setNotes(String notes) { this.notes = notes; }
+        public Builder(String id, String customerEmail) {
+            this.id = id;
+            this.customerEmail = customerEmail;
+        }
+
+        public Builder addLine(OrderLine line) {
+            this.lines.add(line);
+            return this;
+        }
+
+        public Builder withDiscountPercent(Integer discountPercent) {
+            this.discountPercent = discountPercent;
+            return this;
+        }
+
+        public Builder withExpedited(boolean expedited) {
+            this.expedited = expedited;
+            return this;
+        }
+
+        public Builder withNotes(String notes) {
+            this.notes = notes;
+            return this;
+        }
+
+        public Order build() {
+            if (!PricingRules.isValidEmail(customerEmail)) {
+                throw new IllegalArgumentException("Invalid customer email format");
+            }
+            if (!PricingRules.isValidDiscount(discountPercent)) {
+                throw new IllegalArgumentException("Discount percent must be between 0 and 100");
+            }
+            if (lines.isEmpty()) {
+                throw new IllegalArgumentException("Order must have at least one line");
+            }
+            return new Order(this);
+        }
+    }
 
     public String getId() { return id; }
     public String getCustomerEmail() { return customerEmail; }
-    public List<OrderLine> getLines() { return lines; } // leaks internal list
+    public List<OrderLine> getLines() { return java.util.Collections.unmodifiableList(lines); }
     public Integer getDiscountPercent() { return discountPercent; }
     public boolean isExpedited() { return expedited; }
     public String getNotes() { return notes; }
