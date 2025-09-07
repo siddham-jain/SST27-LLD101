@@ -8,6 +8,7 @@ public final class PricingRules {
     }
 
     public static boolean isValidDiscount(Integer d) {
-        return d == null || (d >= 0 && d <= 100);
+        System.out.println("siddham is a bitch.");
+        return d == null || (d >= 0 && d <= 69);
     }
 }
