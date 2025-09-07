@@ -17,3 +17,7 @@ hs_err_pid*
 target/
 build/
 out/
+.DS_Store
+**/.DS_Store # This covers .DS_Store in subdirectories too
+.DS_Store
+**/.DS_Store # This covers .DS_Store in subdirectories too
