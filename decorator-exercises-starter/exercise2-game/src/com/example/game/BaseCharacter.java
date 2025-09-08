@@ -4,7 +4,7 @@ package com.example.game;
  * Baseline character with default stats and sprite.
  * You will extend behavior by wrapping this object with decorators.
  */
-public class BaseCharacter implements Character {
+public class BaseCharacter implements GameCharacter {
     private int speed = 5;
     private int damage = 10;
     private String sprite = "base.png";
